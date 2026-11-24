@@ -27,24 +27,40 @@ export default async function LoanRequestsPage({ searchParams }: LoanRequestsPag
   return (
     <main>
       <h1>Loan requests</h1>
-
       <Link className="button" href="/loan-requests/new">
         New request
       </Link>
-
       <form method="GET" action="/loan-requests">
         <select name="toolId" defaultValue={toolId ?? ""}>
           <option value="">All tools</option>
-
           {tools.map((tool) => (
             <option key={tool.id} value={tool.id}>
               {tool.name}
             </option>
           ))}
         </select>
-
         <button type="submit">Filter</button>
       </form>
+      <section className="panel" aria-label="Loan requests">
+
+        {requests === null && <p role="alert"> Could not load requests. </p>}
+        {requests?.length === 0 && <p>There are no requests for now. </p>}
+        {requests && requests.length > 0 && (
+
+          requests.map((request: { id: number; purpose: string; days: number; tool: Tool;
+          }) => (
+            <article key={request.id}>
+              <h2>{request.tool.name}</h2>
+              <p>Id: {request.id}</p>
+              <p>Purpose: {request.purpose}</p>
+              <p>Days: {request.days}</p>
+              <Link href={`/loan-requests/${request.id}`}>
+                view receipt
+              </Link>
+            </article>
+          ))
+        )}
+      </section>
     </main>
   );
 }
